@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：最主要的作用就是绑定mapper.xml与对应那个Mapper接口的关系，要求接口名称为：全限定名 -->
+<mapper namespace="com.fdzc.firstproject.mapper.DepartmentMapper">
+
+    <delete id="BatchDeleteDept">
+        delete
+        from department
+        where id
+        in
+        <foreach  item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+
+
+    <resultMap id="deptMap" type="com.fdzc.firstproject.vo.DeptVo">
+        <id column="id" property="id"/>
+        <result column="dept_name" property="deptName"/>
+        <result column="description" property="description"/>
+        <result column="address" property="address"/>
+        <collection property="users" ofType="com.fdzc.firstproject.entity.User">
+            <result column="u.id" property="id"/>
+            <result column="user_name" property="userName"/>
+            <result column="gender" property="gender"/>
+            <result column="birthday" property="birthday"/>
+            <result column="id" property="deptId"/>
+        </collection>
+    </resultMap>
+    <select id="FindDeptUsers" resultMap="deptMap">
+        select
+            d.id,
+            d.dept_name,
+            d.description,
+            d.address,
+            u.id,
+            u.user_name,
+            u.password,
+            u.gender,
+            u.birthday
+        from
+            department d
+                left join
+            user u
+            on
+                d.id = u.dept_id
+        where
+            d.id=#{id}
+    </select>
+</mapper>

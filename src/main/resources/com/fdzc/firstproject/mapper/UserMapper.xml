@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：最主要的作用就是绑定mapper.xml与对应那个Mapper接口的关系，要求接口名称为：全限定名 -->
+<mapper namespace="com.fdzc.firstproject.mapper.UserMapper">
+
+    <delete id="BatchDeleteUser">
+        delete from user where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+    <select id="FindUserDept" resultType="com.fdzc.firstproject.vo.UserVo">
+        select
+            u.user_name,u.gender,u.birthday,d.id deptId,d.dept_name,d.description,d.address
+        from
+            user u
+                left join
+                department d
+            on
+                u.dept_id = d.id;
+    </select>
+
+
+
+</mapper>
